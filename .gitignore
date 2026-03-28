@@ -1,0 +1,29 @@
+# Estado do Terraform — nunca versionar
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Chaves SSH geradas localmente
+keys/
+
+# Diretório de trabalho do Terraform
+.terraform/
+.terraform.lock.hcl
+
+# Arquivos de variáveis com valores sensíveis
+*.tfvars
+*.tfvars.json
+
+# Planos gerados
+tfplan
+*.tfplan
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
