@@ -1,16 +1,7 @@
-name: Terraform
+name: Terraform Apply
 
 on:
   workflow_dispatch:
-    inputs:
-      action:
-        description: "Ação a executar"
-        required: true
-        default: apply
-        type: choice
-        options:
-          - apply
-          - destroy
 
 env:
   TF_VAR_aws_region: ${{ vars.AWS_REGION }}
@@ -20,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
-    name: Terraform ${{ github.event.inputs.action }}
+  apply:
+    name: Terraform Apply
     runs-on: ubuntu-latest
 
     steps:
@@ -46,24 +37,11 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      # -----------------------------------------------------------------------
-      # APPLY
-      # -----------------------------------------------------------------------
       - name: Terraform Plan
-        if: github.event.inputs.action == 'apply'
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
-        if: github.event.inputs.action == 'apply'
         run: terraform apply -auto-approve tfplan
 
       - name: Show outputs
-        if: github.event.inputs.action == 'apply'
         run: terraform output -json
-
-      # -----------------------------------------------------------------------
-      # DESTROY
-      # -----------------------------------------------------------------------
-      - name: Terraform Destroy
-        if: github.event.inputs.action == 'destroy'
-        run: terraform destroy -auto-approve
