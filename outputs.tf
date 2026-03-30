@@ -39,3 +39,8 @@ output "ssh_connection_strings" {
     for eip in aws_eip.main : "ssh -i ./${var.key_name}.pem ubuntu@${eip.public_ip}"
   ]
 }
+
+output "ssh_known_hosts" {
+  description = "Resultado do ssh-keyscan dos Elastic IPs (chaves públicas dos hosts)"
+  value       = data.external.ssh_keyscan.result.known_hosts
+}

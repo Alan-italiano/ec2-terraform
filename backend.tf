@@ -13,12 +13,12 @@
 # Substitua os valores entre < > e descomente o bloco abaixo.
 # ---------------------------------------------------------------------------
 
-# terraform {
-#   backend "s3" {
-#     bucket         = "<BUCKET_ESTADO>"
-#     key            = "ec2-terraform/terraform.tfstate"
-#     region         = "us-east-1"
-#     encrypt        = true
-#     dynamodb_table = "terraform-locks"
-#   }
-# }
+ terraform {
+   backend "s3" {
+     bucket         = "ec2-project-terraform-state"
+     key            = "ec2-terraform/terraform.tfstate"
+     region         = "us-east-1"
+     encrypt        = true
+     dynamodb_table = "terraform-locks"
+   }
+ }

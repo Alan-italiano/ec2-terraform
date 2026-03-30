@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/tls"
       version = "~> 4.0"
     }
+    external = {
+      source  = "hashicorp/external"
+      version = "~> 2.0"
+    }
   }
 }
 
@@ -200,4 +204,24 @@ locals {
     Project     = var.instance_name
     ManagedBy   = "terraform"
   }
+}
+
+# ---------------------------------------------------------------------------
+# ssh-keyscan — coleta as chaves públicas dos hosts via Elastic IPs
+# ---------------------------------------------------------------------------
+data "external" "ssh_keyscan" {
+  program = [
+    "bash", "-c",
+    <<-EOT
+      IPS=$(cat | python3 -c "import sys,json; print(' '.join(json.load(sys.stdin)['ips'].split(',')))")
+      RESULT=$(ssh-keyscan $IPS 2>/dev/null)
+      python3 -c "import sys,json; s=sys.stdin.read(); print(json.dumps({'known_hosts': s}))" <<< "$RESULT"
+    EOT
+  ]
+
+  query = {
+    ips = join(",", aws_eip.main[*].public_ip)
+  }
+
+  depends_on = [aws_eip.main]
 }
